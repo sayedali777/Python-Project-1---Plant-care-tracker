@@ -43,30 +43,34 @@ def add_plant() :
         
     
 
-def main_menu():
-    """ main menu for the plant care tracker application """
-    print('Welcome to the Plant Care Tracker')
-    print('1. Add a new plant to the collection')
-    print('2. Record a plant care activity')
-    print('3. View plants due for care')
-    print('4. Search plants by name or location')
-    print('5. View all plants')
-    print('6. Exit application')
-
-    choice = input('Please enter your choice to use the application (1-6)')
-
-    if choice == '1':
-        add_plant()
-    elif choice == '2':
-        record_care_activity()
-    elif choice == '3':
-        view_plants_due_for_care()
-    elif choice == '4':
-        search_all()
-    elif choice == '5':
-        view_all_plants()
-    elif choice == '6':
-        print('Thank you for using this application, Goodbye!')
-    else:
-        print('Invalid choice, please chose from 1-6')
+def add_photo():
+    
+    plants = pd.read_csv('./plants.csv')
+    
+    if len(plants) == 0:
+        print('No plants found! Please add a plant first.')
+        return
+    
+    print('\nYour plants:')
+    for i in range(len(plants)):
+        plant = plants.iloc[i]
+        print(f"{i+1}. {plant['name']} (ID: {plant['id']})")
+    
+    plant_id = input('\nEnter the plant ID to add a photo: ')
+    
+    if plant_id not in plants['id'].values:
+        print(f"Plant ID '{plant_id}' not found!")
+        return
+    
+    photo_path = input('Enter the photo file path (e.g. /photos/rose.jpg): ')
+    
+    if photo_path == '':
+        print('Photo path cannot be empty.')
+        return
+    
+    plants['photo_path'] = plants['photo_path'].astype(str)
+    
+    plants.loc[plants['id'] == plant_id, 'photo_path'] = photo_path
+    plants.to_csv('./plants.csv', index=False)
+    print('Photo added successfully!')
     
