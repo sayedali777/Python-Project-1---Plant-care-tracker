@@ -6,7 +6,7 @@ def load_care_log():
      """ 
     this will read all the activities from the care_log csv
      """
-     care_log = pd.read_csv('.care_log.csv')
+     care_log = pd.read_csv('./care_log.csv')
      return care_log 
 
     
