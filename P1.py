@@ -12,6 +12,10 @@ def load_plants():
 
 def add_plant() :
     """ This function asks the user for the plants details then adds the new plant to the csv file """
+
+    confirm = input("Press Enter to continue or 'b' to go back: ")
+    if confirm.lower() == 'b':
+        return
     ## take user input
     
     name = input('Enter Plant name/species: ')
@@ -21,7 +25,7 @@ def add_plant() :
     sunlight = input('Sunlight needs (Low, Medium, High) :').capitalize()
     last_watered = input('When was the plant last watered? "Day-Month-Year":')
 
-    ## Checking for errors
+    
     if name == '':
         print('Please enter plant name, cannot be empty!')
     elif location == '':
@@ -44,7 +48,9 @@ def add_plant() :
     
 
 def add_photo():
-    
+    confirm = input("Press Enter to continue or 'b' to go back: ")
+    if confirm.lower() == 'b':
+        return    
     plants = pd.read_csv('./plants.csv')
     
     if len(plants) == 0:

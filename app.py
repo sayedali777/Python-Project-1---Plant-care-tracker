@@ -3,11 +3,11 @@ import pandas as pd
 import uuid
 from datetime import date
 
-# ─── Page Config ───
+# Page Config
 st.set_page_config(page_title="Plant Care Tracker", layout="wide")
 st.title("Plant Care Tracker")
 
-# ─── Sidebar Menu ───
+# Sidebar Menu
 menu = st.sidebar.selectbox(
     "Choose an option",
     [
@@ -20,7 +20,7 @@ menu = st.sidebar.selectbox(
     ]
 )
 
-# ─── View All Plants ───
+# View All Plants
 if menu == "View All Plants":
     st.header("All Plants")
     plants = pd.read_csv('./plants.csv')
@@ -29,7 +29,7 @@ if menu == "View All Plants":
     else:
         st.dataframe(plants)
 
-# ─── Add a New Plant ───
+# Add a New Plant
 elif menu == "Add a New Plant":
     st.header("Add a New Plant")
     
@@ -66,7 +66,7 @@ elif menu == "Add a New Plant":
             new_plant.to_csv('./plants.csv', mode='a', header=False, index=False)
             st.success(f"{name} has been added successfully!")
 
-# ─── Record Care Activity ───
+# Record Care Activity
 elif menu == "Record Care Activity":
     st.header("Record Care Activity")
     
@@ -75,8 +75,9 @@ elif menu == "Record Care Activity":
     if len(plants) == 0:
         st.warning("No plants found! Please add a plant first.")
     else:
-        plant_names = plants['name'].tolist()
-        selected_name = st.selectbox("Select a plant", plant_names)
+        plant_options = [f"{plants.iloc[i]['name']} (ID: {plants.iloc[i]['id']})" for i in range(len(plants))]
+        selected_option = st.selectbox("Select a plant", plant_options)
+        selected_name = selected_option.split(" (ID:")[0]
         activity = st.selectbox("Activity", ["Watering", "Fertilizing", "Repotting", "Pruning"])
         
         if st.button("Record Activity"):
@@ -90,7 +91,6 @@ elif menu == "Record Care Activity":
             }])
             new_activity.to_csv('./care_log.csv', mode='a', header=False, index=False)
             
-            # If watering update last_watered in plants.csv
             if activity == "Watering":
                 plants['last_watered'] = plants['last_watered'].astype(str)
                 plants.loc[plants['id'] == plant_id, 'last_watered'] = today
@@ -98,7 +98,7 @@ elif menu == "Record Care Activity":
             
             st.success(f"{activity} recorded for {selected_name} on {today}!")
 
-# ─── View Plants Due for Care ───
+# View Plants Due for Care
 elif menu == "View Plants Due for Care":
     st.header("Plants Due for Care")
     
@@ -119,6 +119,7 @@ elif menu == "View Plants Due for Care":
             if days_since_watered >= watering_frequency:
                 due_plants.append({
                     'Name': plant['name'],
+                    'ID': plant['id'],
                     'Location': plant['location'],
                     'Days Since Watered': days_since_watered,
                     'Watering Frequency': watering_frequency
@@ -129,7 +130,7 @@ elif menu == "View Plants Due for Care":
         else:
             st.dataframe(pd.DataFrame(due_plants))
 
-# ─── Search Plants ───
+# Search Plants
 elif menu == "Search Plants":
     st.header("Search Plants")
     
@@ -153,7 +154,6 @@ elif menu == "Search Plants":
                 st.write(f"Found {len(results)} plant(s) matching '{search_term}':")
                 st.dataframe(results)
                 
-                # Show care history for each result
                 st.subheader("Care History")
                 for i in range(len(results)):
                     plant = results.iloc[i]
@@ -162,9 +162,9 @@ elif menu == "Search Plants":
                     if len(plant_care) == 0:
                         st.write("No care activities recorded yet.")
                     else:
-                        st.dataframe(plant_care[['activity', 'date']])
+                        st.dataframe(plant_care)
 
-# ─── Add Photo ───
+# Add Photo
 elif menu == "Add Photo to Plant":
     st.header("Add Photo to Plant")
     
@@ -173,16 +173,25 @@ elif menu == "Add Photo to Plant":
     if len(plants) == 0:
         st.warning("No plants found! Please add a plant first.")
     else:
-        plant_names = plants['name'].tolist()
-        selected_name = st.selectbox("Select a plant", plant_names)
-        photo_path = st.text_input("Enter photo file path (e.g. /photos/rose.jpg)")
+        plant_options = [f"{plants.iloc[i]['name']} (ID: {plants.iloc[i]['id']})" for i in range(len(plants))]
+        selected_option = st.selectbox("Select a plant", plant_options)
+        selected_name = selected_option.split(" (ID:")[0]
+        
+        uploaded_file = st.file_uploader("Upload a photo", type=["jpg", "jpeg", "png"])
+        
+        if uploaded_file is not None:
+            st.image(uploaded_file, caption=f"Photo for {selected_name}", width=300)
         
         if st.button("Add Photo"):
-            if photo_path == "":
-                st.error("Photo path cannot be empty.")
+            if uploaded_file is None:
+                st.error("Please upload a photo first.")
             else:
+                photo_path = f"./{uploaded_file.name}"
+                with open(photo_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                
                 plants['photo_path'] = plants['photo_path'].astype(str)
                 plant_id = plants[plants['name'] == selected_name]['id'].values[0]
                 plants.loc[plants['id'] == plant_id, 'photo_path'] = photo_path
                 plants.to_csv('./plants.csv', index=False)
-                st.success(f"Photo added for {selected_name}!")
+                st.success(f"Photo uploaded and saved for {selected_name}!")

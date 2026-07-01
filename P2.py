@@ -88,6 +88,7 @@ def view_plants_due_for_care():
     for i in range(len(plants)):
         plant = plants.iloc[i]
         plant_name = plant['name']
+        plant_id = plant['id']
         watering_frequency = int(plant['watering_frequency'])
         last_watered = pd.to_datetime(plant['last_watered'], dayfirst=True).date()
         
@@ -95,7 +96,7 @@ def view_plants_due_for_care():
         
         if days_since_watered >= watering_frequency:
             due_plants.append(plant_name)
-            print(f' {plant_name} - last watered {days_since_watered} days ago (every {watering_frequency} days)')
+            print(f'{plant_name} (ID: {plant_id}) - last watered {days_since_watered} days ago (every {watering_frequency} days)')
     
     if len(due_plants) == 0:
         print('All plants are up to date!')
