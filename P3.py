@@ -6,6 +6,10 @@ plants_f = 'plants.csv'
 
 def view_all_plants():
     """Displays all plants in the collection."""
+    confirm = input("Press Enter to continue or 'b' to go back: ")
+    if confirm.lower() == 'b':
+        return 
+        
     try:
         plants = pd.read_csv('./plants.csv')
         if len(plants) == 0:
@@ -29,6 +33,10 @@ def view_all_plants():
 
 def search_all():
     """Searches for plants by name or location and displays their care details."""
+    confirm = input("Press Enter to continue or 'b' to go back: ")
+    if confirm.lower() == 'b':
+        return 
+        
     plants = pd.read_csv('./plants.csv')
     care = pd.read_csv('./care_log.csv')
     

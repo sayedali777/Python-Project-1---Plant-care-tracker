@@ -12,7 +12,10 @@ def load_care_log():
     
 def record_care_activity():
     """Records a new care activity for a plant and saves it to care_log.csv."""
-    
+
+    confirm = input("Press Enter to continue or 'b' to go back: ")
+    if confirm.lower() == 'b':
+        return 
     plants = pd.read_csv('./plants.csv')
     
     if len(plants) == 0:
@@ -25,6 +28,10 @@ def record_care_activity():
     
     # Take input from user
     choice = input('\nEnter the number of the plant you cared for: ')
+    
+    if int(choice) < 1 or int(choice) > len(plants):
+        print(f'Invalid choice! Please enter a number between 1 and {len(plants)}.')
+        return
     
     plant_id = plants.iloc[int(choice) - 1]['id']
     plants_name = plants.iloc[int(choice) - 1]['name']
@@ -71,6 +78,9 @@ def record_care_activity():
 
 def view_plants_due_for_care():
     """Shows a list of plants that are due for watering based on their watering frequency."""
+    confirm = input("Press Enter to continue or 'b' to go back: ")
+    if confirm.lower() == 'b':
+        return    
     
     plants = pd.read_csv('./plants.csv')
     care_log = pd.read_csv('./care_log.csv')
