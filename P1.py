@@ -1,3 +1,4 @@
+## Done by Sayed Ali
 import pandas as pd
 
 import uuid
@@ -48,6 +49,7 @@ def add_plant() :
     
 
 def add_photo():
+    """ This function allows the user to add a photo if he wants to a plant"""
     confirm = input("Press Enter to continue or 'b' to go back: ")
     if confirm.lower() == 'b':
         return    

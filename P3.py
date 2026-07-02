@@ -1,3 +1,4 @@
+## Done By Ali Alsaboodi
 from P1 import *
 from P2 import *
 import pandas as pd
@@ -77,6 +78,7 @@ def search_all():
                 activity = plant_care.iloc[j]
                 print(f" {activity['activity']} on {activity['date']}")
 
+## Done by Sayed Ali
 def main_menu():
     """ main menu for the plant care tracker application """
     print('Welcome to the Plant Care Tracker')
