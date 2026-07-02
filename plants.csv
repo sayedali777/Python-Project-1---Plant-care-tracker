@@ -1,3 +1,4 @@
 id,name,location,date_acquired,watering_frequency,sunlight,last_watered,photo_path
 2a9902a4-43d6-4b46-8330-de1067281f8f,Cactus,Garden,01-02-2025,7,High,01-07-2026,./Cactus.jpg
-1508c78d-3514-4525-aec3-471df5662440,cactus,Room,20-06-2026,1,Low,27-06-2026,
+1508c78d-3514-4525-aec3-471df5662440,cactus,Room,20-06-2026,1,Low,02-07-2026,
+606b6b14-d8aa-45d6-a852-298a3ce130b7,Mango,Garden,01-01-2026,4,Low,02-07-2026,
